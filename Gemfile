@@ -44,7 +44,6 @@ gem "bootsnap", require: false
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
-gem 'solid_queue'
 gem 'docx', git: 'https://github.com/ruby-docx/docx', ref: 'c5bcb57b3d21fead105f1c7af8d3881dd31674cc'
 gem 'rubyzip'
 gem 'tailwindcss-rails'
