@@ -47,6 +47,7 @@ gem "bootsnap", require: false
 gem 'docx', git: 'https://github.com/ruby-docx/docx', ref: 'c5bcb57b3d21fead105f1c7af8d3881dd31674cc'
 gem 'rubyzip', '~> 2.3'
 gem 'tailwindcss-rails', '~> 2.6.1'
+gem 'rack-attack'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
