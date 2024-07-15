@@ -68,7 +68,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
-  config.active_job.queue_adapter = :solid_queue
+  # config.active_job.queue_adapter = :solid_queue
   # config.active_job.queue_name_prefix = "docx_processor_production"
 
   # config.action_mailer.perform_caching = false
@@ -85,7 +85,7 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Do not dump schema after migrations.
-  config.active_record.dump_schema_after_migration = false
+  # config.active_record.dump_schema_after_migration = false
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [

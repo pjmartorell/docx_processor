@@ -6,13 +6,13 @@ require "rails"
 # action_cable/engine
 # action_mailbox/engine
 # action_mailer/railtie
+# active_record/railtie
 # action_text/engine
+# active_job/railtie
 
 %w(
   action_controller/railtie
-  active_record/railtie
   action_view/railtie
-  active_job/railtie
   rails/test_unit/railtie
 ).each do |railtie|
   begin
