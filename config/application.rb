@@ -3,13 +3,13 @@ require_relative "boot"
 require "rails"
 
 # active_storage/engine
-# action_controller/railtie
 # action_cable/engine
 # action_mailbox/engine
 # action_mailer/railtie
 # action_text/engine
 
 %w(
+  action_controller/railtie
   active_record/railtie
   action_view/railtie
   active_job/railtie
