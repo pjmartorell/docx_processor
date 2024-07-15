@@ -3,11 +3,21 @@ class DocxController < ApplicationController
     if params[:files].present?
       processed_files = []
 
+      # Set the number of threads from an environment variable, defaulting to 2 if not set
+      thread_count = (ENV['THREAD_COUNT'] || 2).to_i
+      thread_pool = Concurrent::FixedThreadPool.new(thread_count)
+
       begin
         params[:files].each do |file|
-          processed_file = process_docx_file(file) # Add your processing logic here
-          processed_files << processed_file if processed_file
+          thread_pool.post do
+            processed_file = process_docx_file(file) # Add your processing logic here
+            processed_files << processed_file if processed_file
+          end
         end
+
+        # Wait for all threads to complete
+        thread_pool.shutdown
+        thread_pool.wait_for_termination
 
         # Create a zip file from processed files
         zip_file_path = create_zip_file(processed_files)

@@ -285,6 +285,7 @@ PLATFORMS
 DEPENDENCIES
   bootsnap
   capybara
+  concurrent-ruby (~> 1.3.3)
   debug
   docx!
   dotenv-rails
