@@ -8,9 +8,9 @@ require "rails"
 # action_mailer/railtie
 # active_record/railtie
 # action_text/engine
-# active_job/railtie
 
 %w(
+  active_job/railtie
   action_controller/railtie
   action_view/railtie
   rails/test_unit/railtie
