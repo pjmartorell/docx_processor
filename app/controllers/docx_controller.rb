@@ -3,30 +3,17 @@ class DocxController < ApplicationController
     if params[:files].present?
       processed_files = []
 
-      # Set the number of threads from an environment variable, defaulting to 2 if not set
-      thread_count = (ENV['THREAD_COUNT'] || 2).to_i
-      thread_pool = Concurrent::FixedThreadPool.new(thread_count)
-
       begin
         params[:files].each do |file|
-          thread_pool.post do
-            processed_file = process_docx_file(file) # Add your processing logic here
-            processed_files << processed_file if processed_file
-          end
+          processed_file = process_docx_file(file)
+          processed_files << processed_file if processed_file
         end
-
-        # Wait for all threads to complete
-        thread_pool.shutdown
-        thread_pool.wait_for_termination
 
         # Create a zip file from processed files
         zip_file_path = create_zip_file(processed_files)
 
         # Send the zip file for download
         send_file zip_file_path, type: 'application/zip', disposition: 'attachment', filename: 'processed_files.zip'
-      ensure
-        # Cleanup temporary files
-        processed_files.each { |entry| entry[:temp_file].close! }
       end
     else
       flash[:error] = 'No heu seleccionat cap fitxer 🙃'
@@ -37,24 +24,24 @@ class DocxController < ApplicationController
   private
 
   def process_docx_file(file)
-    # Process the DocX file
     doc = Docx::Document.open(file.tempfile)
 
     # Example processing: Remove the second paragraph if it exists
     doc.paragraphs.at(2).remove! if doc.paragraphs.size > 2
 
-    # Save processed content to a temporary file
-    temp_file = Tempfile.new(%w[processed_ .docx])
-    doc.save(temp_file.path)
+    # Save processed content to an in-memory StringIO object using the stream method
+    processed_doc_io = doc.stream
 
-    { original_filename: file.original_filename, temp_file: temp_file }
+    { original_filename: file.original_filename, doc_io: processed_doc_io }
   end
 
   def create_zip_file(files)
     zip_file_path = Tempfile.new(%w[processed_files_ .zip]).path
     ::Zip::File.open(zip_file_path, Zip::File::CREATE) do |zip|
       files.each do |entry|
-        zip.add(entry[:original_filename], entry[:temp_file].path)
+        zip.get_output_stream(entry[:original_filename]) do |stream|
+          stream.write(entry[:doc_io].read) # Write the in-memory doc content directly to the zip
+        end
       end
     end
     zip_file_path
