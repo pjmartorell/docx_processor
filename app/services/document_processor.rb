@@ -1,4 +1,3 @@
-require 'zip'
 require 'active_model'
 
 class DocumentProcessor
