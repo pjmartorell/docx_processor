@@ -2,23 +2,34 @@ class DocxController < ApplicationController
   def process_docx
     if params[:files].present?
       processed_files = []
+      thread_count = ENV.fetch("THREAD_COUNT", 2).to_i
 
-      begin
-        params[:files].each do |file|
-          processed_file = process_docx_file(file)
-          processed_files << processed_file if processed_file
+      # Create a thread pool
+      pool = Concurrent::FixedThreadPool.new(thread_count)
+
+      futures = params[:files].map do |file|
+        Concurrent::Future.execute(pool: pool) do
+          process_docx_file(file) # Process files concurrently
         end
-
-        # Create a zip file from processed files
-        zip_file_path = create_zip_file(processed_files)
-
-        # Send the zip file for download
-        send_file zip_file_path, type: 'application/zip', disposition: 'attachment', filename: 'processed_files.zip'
       end
+
+      # Wait for all futures to complete and collect results
+      futures.each do |future|
+        processed_file = future.value # This will block until the processing is done
+        processed_files << processed_file if processed_file
+      end
+
+      # Create a zip file from processed files
+      zip_file_path = create_zip_file(processed_files)
+
+      # Send the zip file for download
+      send_file zip_file_path, type: 'application/zip', disposition: 'attachment', filename: 'processed_files.zip'
     else
       flash[:error] = 'No heu seleccionat cap fitxer 🙃'
       redirect_to root_path
     end
+  ensure
+    pool.shutdown
   end
 
   private
