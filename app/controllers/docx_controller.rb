@@ -1,3 +1,5 @@
+require 'async/semaphore'
+
 class DocxController < ApplicationController
   def process_docx
     if params[:files].present?
@@ -5,8 +7,10 @@ class DocxController < ApplicationController
 
       Async do
         begin
+          semaphore = Async::Semaphore.new(ENV.fetch('TASKS_CONCURRENCY', 2).to_i)
+
           tasks = params[:files].map do |file|
-            Async do
+            semaphore.async do
               processed_files << process_docx_file(file)
             end
           end
