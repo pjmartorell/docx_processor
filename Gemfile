@@ -48,7 +48,7 @@ gem 'docx', git: 'https://github.com/ruby-docx/docx', ref: 'c5bcb57b3d21fead105f
 gem 'rubyzip', '~> 2.3'
 gem 'tailwindcss-rails', '~> 2.6.1'
 gem 'rack-attack'
-gem 'concurrent-ruby', '~> 1.3.3'
+gem 'async', '~> 2.14'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
