@@ -2,13 +2,14 @@ import { Controller } from "@hotwired/stimulus";
 import fileSaver from "file-saver";
 
 export default class extends Controller {
-    static targets = ["submitButton", "spinner", "buttonText"]
+    static targets = ["submitButton", "spinner", "buttonText", "fileInput"]
 
     connect() {
         this.submitButton = this.submitButtonTarget;
         this.spinner = this.spinnerTarget;
         this.originalButtonText = this.buttonTextTarget.innerHTML;
         this.buttonText = this.buttonTextTarget;
+        this.fileInput = this.fileInputTarget;
     }
 
     handleSubmit(event) {
@@ -50,6 +51,7 @@ export default class extends Controller {
                 this.submitButton.disabled = false;
                 this.buttonText.innerHTML = this.originalButtonText;
                 this.spinner.classList.add("hidden");
+                this.fileInput.value = "";
             });
     }
 }
