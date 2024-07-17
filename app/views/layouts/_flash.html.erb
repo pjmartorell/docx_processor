@@ -1,13 +1,7 @@
-<div id="flash">
-  <% if flash[:error] %>
-    <div class="bg-red-200 text-red-800 p-4 rounded mt-4 flash-message">
-      <%= flash[:error] %>
-    </div>
-  <% end %>
-
-  <% if flash[:notice] %>
-    <div class="bg-green-200 text-green-800 p-4 rounded mt-4 flash-message">
-      <%= flash[:notice] %>
+<div id="flash" data-controller="flash">
+  <% flash.each do |type, message| %>
+    <div class="<%= flash_classes(type) %>" data-flash-target="message">
+      <%= message %>
     </div>
   <% end %>
 </div>

@@ -5,7 +5,10 @@ class DocxController < ApplicationController
     if zip = processor.perform
       send_file zip, type: 'application/zip', disposition: 'attachment', filename: 'processed_files.zip'
     else
-      render json: { errors: processor.errors.full_messages }, status: :unprocessable_entity
+      flash.now[:error] = processor.errors.full_messages.join('. ')
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("flash", partial: "layouts/flash") }
+      end
     end
   end
 end
