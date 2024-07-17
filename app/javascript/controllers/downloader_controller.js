@@ -12,7 +12,7 @@ export default class extends Controller {
     handleSubmit(event) {
         event.preventDefault();
         this.submitButton.disabled = true;
-        this.submitButton.value = "Processing...";
+        this.submitButton.value = "Processant...";
 
         const form = event.target;
         const data = new FormData(form);
