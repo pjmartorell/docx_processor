@@ -26,6 +26,15 @@ export default class extends Controller {
             .then(blob => {
                 if (blob.type === "application/zip") {
                     fileSaver.saveAs(blob, "processed_files.zip");
+                    const successMessage = `
+                        <turbo-stream action="append" target="flash">
+                            <template>
+                                <div class="border border-green-400 bg-green-200 text-green-800 p-4 rounded mt-4 flash-message" data-flash-target="message">
+                                    El processament s'ha completat correctament
+                                </div>
+                            </template>
+                        </turbo-stream>`;
+                    Turbo.renderStreamMessage(successMessage);
                 } else {
                     return blob.text().then(text => {
                         if (text.startsWith("<turbo-stream")) {
